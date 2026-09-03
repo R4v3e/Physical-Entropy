@@ -1,0 +1,24 @@
+services:
+  api:
+    build: ./api
+    container_name: lava-rng-api
+    devices:
+      - "/dev/video0:/dev/video0"
+    volumes:
+      - ./data:/app/data
+
+  frontend:
+    build: ./frontend
+    container_name: lava-rng-frontend
+    
+  caddy:
+    image: caddy:2-alpine
+    container_name: lava-rng-caddy
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro  
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: lava-rng-cloudflared
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    restart: unless-stopped

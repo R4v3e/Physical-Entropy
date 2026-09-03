@@ -1,0 +1,25 @@
+.env
+
+# Runtime data
+api/data/database.sqlite
+api/data/images/*.jpg
+
+data/images/*.jpg
+data/database.sqlite
+
+# Python
+api/__pycache__/
+*.pyc
+
+# Test files
+api/test.jpg
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
