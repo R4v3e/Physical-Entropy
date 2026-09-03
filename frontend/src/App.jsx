@@ -416,44 +416,58 @@ function App() {
             <div className="card">
               <span>Lava mean</span>
               <strong>
-                {Math.round(distributionStats.lava.mean)}
+                {distributionStats.lava.mean === null
+                 ? "-"
+                 :Math.round(distributionStats.lava.mean)}
               </strong>
             </div>
 
             <div className="card">
               <span>Python random mean</span>
               <strong>
-                {Math.round(distributionStats.random.mean)}
+                {distributionStats.random.mean === null
+                 ? "-"
+                 : Math.round(distributionStats.random.mean)}
               </strong>
             </div>
 
             <div className="card">
               <span>Lava std. deviation</span>
               <strong>
-                {Math.round(distributionStats.lava.standardDeviation)}
+                {distributionStats.lava.standardDeviation === null
+                 ? "-"
+                 : Math.round(distributionStats.lava.standardDeviation)}
               </strong>
             </div>
 
             <div className="card">
               <span>Python random std. deviation</span>
               <strong>
-                {Math.round(distributionStats.random.standardDeviation)}
+                {distributionStats.random.standardDeviation === null
+                 ? "-"
+                 : Math.round(distributionStats.random.standardDeviation)}
               </strong>
             </div>
-<div className="card">
-  <span>Lava χ²</span>
-  <strong>
-    {distributionStats.lava.chiSquare.toFixed(2)}
-  </strong>
-</div>
 
-<div className="card">
-  <span>Python random χ²</span>
-  <strong>
-    {distributionStats.random.chiSquare.toFixed(2)}
-  </strong>
-</div>
+           <div className="card">
+             <span>Lava χ²</span>
+              <strong>
+                {distributionStats.lava.chiSquare === null
+                 ? "-"
+                 : distributionStats.lava.chiSquare.toFixed(2)}
+              </strong>
+           </div>
+
+           <div className="card">
+            <span>Python random χ²</span>
+             <strong>
+               {distributionStats.random.chiSquare === null
+                ? "-"
+                : distributionStats.random.chiSquare.toFixed(2)}
+             </strong>
           </div>
+          
+         </div>
         )}
 
 
