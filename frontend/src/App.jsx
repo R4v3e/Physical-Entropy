@@ -110,6 +110,10 @@ function calculateStats(values) {
 
 
 function App() {
+  const [rangeMin, setRangeMin] = useState(0); 
+  const [rangeMax, setRangeMax] = useState(4294967295);
+  const [rangeError, setRangeError] = useState("");
+
   const [stats, setStats] = useState(null);
   const [samples, setSamples] = useState([]);
   const [distribution, setDistribution] = useState([]);
@@ -211,33 +215,54 @@ function App() {
   }, []);
 
   async function requestRng() {
-    setRngLoading(true);
-    setRngError(null);
+    if (rangeMin < 0 || rangeMin > 4294967295) {
+      setRangeError("Minimum must be between 0 and 4294967295.");
+      return;
+    }
 
-    try {
-      const response = await fetch(
-        `${API_URL}/api/rng?client=website`
-      );
+    if (rangeMax < 0 || rangeMax > 4294967295) {
+      setRangeError("Maximum must be between 0 and 4294967295.");
+      return;
+    }
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.detail || "No RNG value available");
-      }
+    if (rangeMin > rangeMax) {
+      setRangeError("Minimum cannot be greater than maximum.");
+      return;
+    }
 
+  setRangeError("");
+  setRngLoading(true);
+  setRngError(null);
+
+  try {
+    const response = await fetch(
+      `${API_URL}/api/rng?minimum=${rangeMin}&maximum=${rangeMax}&client=website`
+    );
+
+    if (!response.ok) {
       const data = await response.json();
 
-      setRngValue(data);
+      if (Array.isArray(data.detail)) {
+        throw new Error(data.detail[0]?.msg || "Invalid request.");
+      }
 
-      // Refresh counters and history because this sample was consumed.
-      await Promise.all([
-        loadStats(),
-        loadSamples(page),
-      ]);
-    } catch (error) {
-      setRngError(error.message);
-    } finally {
-      setRngLoading(false);
+      throw new Error(data.detail || "No RNG value available");
     }
+
+    const data = await response.json();
+
+    setRngValue(data);
+
+    // Refresh counters and history because this sample was consumed.
+    await Promise.all([
+      loadStats(),
+      loadSamples(page),
+    ]);
+  } catch (error) {
+    setRngError(error.message);
+  } finally {
+    setRngLoading(false);
+  }
   }
 
   async function changePage(newPage) {
@@ -267,18 +292,52 @@ function App() {
 
       {/* RNG */}
       <section className="rng-section">
-        <div>
-          <h2>Get a random number</h2>
-          <p>
-            Request the next available value from the entropy pool.
-          </p>
-        </div>
+  <div>
+    <h2>Get a random number</h2>
+    <p>
+      Request the next available value from the entropy pool.
+    </p>
+  </div>
 
-        <button
-          className="rng-button"
-          onClick={requestRng}
-          disabled={rngLoading || stats.available === 0}
-        >
+  <div className="range-controls">
+    <label>
+      Minimum
+      <input
+        id="range-min"
+        name="minimum"
+        type="number"
+        min="0"
+        max="4294967295"
+        value={rangeMin}
+        onChange={(event) => setRangeMin(Number(event.target.value))}
+      />
+    </label>
+
+    <label>
+      Maximum
+      <input
+        id="range-max"
+        name="maximum"
+        type="number"
+        min="0"
+        max="4294967295"
+        value={rangeMax}
+        onChange={(event) => setRangeMax(Number(event.target.value))}
+      />
+    </label>
+  </div>
+
+  {rangeError && (
+    <p className="error">
+      {rangeError}
+    </p>
+  )}
+
+  <button
+    className="rng-button"
+    onClick={requestRng}
+    disabled={rngLoading || stats.available === 0}
+  >
           {rngLoading ? "Requesting..." : "Generate RNG"}
         </button>
 

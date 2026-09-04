@@ -52,6 +52,34 @@ h2 {
   cursor: not-allowed;
 }
 
+.range-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.range-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.range-controls input {
+  padding: 0.7rem;
+  border: 1px solid #333;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media (max-width: 500px) {
+  .range-controls {
+    flex-direction: column;
+  }
+}
+
 .result {
   margin-top: 2rem;
   padding: 1.5rem;

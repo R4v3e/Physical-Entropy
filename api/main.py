@@ -19,6 +19,8 @@ from database import (
     get_rng_quality,
 )
 
+UINT32_MAX = 4_294_967_295
+
 app = FastAPI(
     title="Lava RNG API",
     version="1.0.0",
@@ -50,14 +52,25 @@ def root():
         "status": "online",
     }
 
-last_rng_request = defaultdict(float)
+def map_rng_to_range(value: int, minimum: int, maximum: int) -> int:
+    range_size = maximum - minimum + 1
+    return minimum + (value * range_size // (UINT32_MAX + 1))
 
+last_rng_request = defaultdict(float)
 RNG_RATE_LIMIT = 2.0
 @app.get("/api/rng")
 def get_rng(
     request: Request,
+    minimum: int = Query(default=0, ge=0, le=UINT32_MAX),
+    maximum: int = Query(default=UINT32_MAX, ge=0, le=UINT32_MAX),
     client: Optional[str] = Query(default=None),
 ):
+    if minimum > maximum:
+        raise HTTPException(
+        status_code=400,
+        detail="Minimum cannot be greater than maximum",
+     )
+    
     client_ip = request.headers.get("CF-Connecting-IP") or request.client.host
 
     now = time.monotonic()
@@ -79,8 +92,14 @@ def get_rng(
             detail="No RNG samples available",
         )
 
+    value = map_rng_to_range(
+        sample["rng_value"],
+        minimum,
+        maximum,
+    )
+
     return {
-        "value": sample["rng_value"],
+        "value": value,
         "sample_id": sample["id"],
         "timestamp": sample["timestamp"],
     }
