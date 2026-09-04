@@ -116,6 +116,7 @@ function App() {
   const [distributionStats, setDistributionStats] = useState(null);
   const [page, setPage] = useState(0);
 
+  const [selectedImage, setSelectedImage] = useState(null);
   const [rngValue, setRngValue] = useState(null);
   const [rngLoading, setRngLoading] = useState(false);
   const [rngError, setRngError] = useState(null);
@@ -486,11 +487,11 @@ function App() {
                 <thead>
                   <tr>
                     <th>ID</th>
-<th>Image</th>
-<th>RNG value</th>
-<th>Timestamp</th>
-<th>Algorithm</th>
-<th>Status</th>
+                    <th>Image</th>
+                    <th>RNG value</th>
+                    <th>Timestamp</th>
+                    <th>Algorithm</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
 
@@ -498,13 +499,15 @@ function App() {
                   {samples.map((sample) => (
                     <tr key={sample.id}>
                       <td>{sample.id}</td>
-<td>
-  <img
-    src={`${API_URL}/${sample.image_path}`}
-    alt={`Sample ${sample.id}`}
-    className="sample-image"
-  />
-</td>
+                       <td>
+                        <img
+                         src={`${API_URL}/${sample.image_path}`}
+                         alt={`Sample ${sample.id}`}
+                         className="sample-image"
+                         onClick={() => setSelectedImage(sample)}
+                        />
+                       </td>
+                      
                       <td className="number">
                         {sample.rng_value}
                       </td>
@@ -561,7 +564,34 @@ function App() {
           </>
         )}
       </section>
+{selectedImage && (
+  <div
+    className="image-modal"
+    onClick={() => setSelectedImage(null)}
+  >
+    <div
+      className="image-modal-content"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <button
+        className="image-modal-close"
+        onClick={() => setSelectedImage(null)}
+        aria-label="Close image preview"
+      >
+        ×
+      </button>
+
+      <img
+        src={`${API_URL}/${selectedImage.image_path}`}
+        alt={`Sample ${selectedImage.id}`}
+        className="image-modal-image"
+      />
+
+      <p>Sample #{selectedImage.id}</p>
     </div>
+  </div>
+)}
+     </div>
   );
 }
 

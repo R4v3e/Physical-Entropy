@@ -209,3 +209,52 @@ th {
   border-radius: 6px;
   display: block;
 }
+
+.image-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.8);
+  box-sizing: border-box;
+}
+
+.image-modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  text-align: center;
+}
+
+.image-modal-image {
+  display: block;
+  max-width: 90vw;
+  max-height: 80vh;
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+}
+
+.image-modal-content p {
+  margin-top: 0.75rem;
+  color: #fff;
+}
+
+.image-modal-close {
+  position: absolute;
+  top: -2.5rem;
+  right: 0;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.sample-image {
+  cursor: pointer;
+}
