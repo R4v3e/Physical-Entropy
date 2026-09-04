@@ -14,15 +14,14 @@ The project provides a REST API for accessing generated random numbers, sample d
 
 ### Endpoints
 
-| Method | Endpoint | Description |
+| **Method** | **Endpoint** | **Description** |
 |---|---|---|
-| GET | `/api/rng` | Generate and consume a random number |
+| GET | `/api/rng` | Generate and consume a random number. Supports optional `minimum` and `maximum` query parameters. |
 | GET | `/api/rng/status` | Check the number of available samples |
 | GET | `/api/samples` | List collected samples |
 | GET | `/api/samples/{id}` | Get a specific sample |
 | GET | `/api/stats` | Get dataset statistics |
 | GET | `/api/stats/distribution` | Get data for statistical distribution comparison |
-
 
 ## Database
 
